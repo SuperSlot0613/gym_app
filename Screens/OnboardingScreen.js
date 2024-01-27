@@ -3,7 +3,7 @@ import { Button, Image, StyleSheet, Text, View } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import useAuth from "../Hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 
 const OnboardingScreen = () => {
   const { user, isFirstLaunch, setIsFirstLaunch } = useAuth();

@@ -8,6 +8,7 @@ import LoginScreen from "./Screens/LoginScreen";
 import CustomDrawerContent from "./Screens/CustomDrawerContent";
 import useAuth from "./Hooks/useAuth";
 import OnboardingScreen from "./Screens/OnboardingScreen";
+import HomeScreen from "./Screens/HomeScreen";
 
 const { width } = Dimensions.get("screen");
 
@@ -32,9 +33,27 @@ function LoginStack(props) {
   );
 }
 
+function HomeStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="HomeScreen"
+      mode="card"
+      headerMode="screen"
+    >
+      <Stack.Screen
+        name="HomeScreen"
+        options={{
+          headerShown: false,
+        }}
+        component={HomeScreen}
+      />
+    </Stack.Navigator>
+  );
+}
+
 const Menu = () => {
   const { user, isFirstLaunch } = useAuth();
-  console.log(user,isFirstLaunch);
+  console.log(user, isFirstLaunch);
   return (
     <Drawer.Navigator
       style={{ flex: 1 }}
@@ -66,11 +85,19 @@ const Menu = () => {
         },
       }}
       initialRouteName={
-        user === null && !isFirstLaunch ? "OnboardingScreen" : "HomeScreen"
+        user === null ? "OnboardingScreen" : "HomeStack"
       }
     >
       {user !== null ? (
-        <></>
+        <>
+          <Drawer.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="HomeStack"
+            component={HomeStack}
+          />
+        </>
       ) : (
         <>
           {!isFirstLaunch ? (

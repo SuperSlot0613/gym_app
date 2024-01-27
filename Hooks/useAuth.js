@@ -6,7 +6,8 @@ import React, {
     useState,
   } from "react";
 //   import { Alert, AsyncStorage } from "react-native";
-  import AsyncStorage from '@react-native-community/async-storage';
+  // import AsyncStorage from '@react-native-community/async-storage';
+  // import { AsyncStorage } from 'react-native';
 //   import * as Google from "expo-google-app-auth";
   import {
     signInWithPopup,
@@ -37,23 +38,23 @@ import React, {
   
   export const AuthProvider = ({ children }) => {
     const [user, setuser] = useState(null);
-    const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+    const [isFirstLaunch, setIsFirstLaunch] = useState(false);
     const navigation = useNavigation();
     const dispatch = useDispatch();
     // console.log(isFirstLaunch)
   
-    useEffect(
-      () =>
-        AsyncStorage.getItem("alreadyLaunched").then((value) => {
-          if (value == null) {
-            AsyncStorage.setItem("alreadyLaunched", "true");
-            setIsFirstLaunch(true);
-          } else {
-            setIsFirstLaunch(false);
-          }
-        }),
-      []
-    );
+    // useEffect(
+    //   async() =>
+    //     await AsyncStorage.getItem("alreadyLaunched").then((value) => {
+    //       if (value == null) {
+    //         AsyncStorage.setItem("alreadyLaunched", "true");
+    //         setIsFirstLaunch(true);
+    //       } else {
+    //         setIsFirstLaunch(false);
+    //       }
+    //     }),
+    //   []
+    // );
   
     // useEffect(
     //   () =>
@@ -167,6 +168,7 @@ import React, {
         signOutPage,
         signWithEmailId,
         registerWithEmailId,
+        setuser
       }),
       [user, isFirstLaunch]
     );

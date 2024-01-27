@@ -32,6 +32,7 @@ initializeAuth(app, {
 // const storage = getStorage(app, "gs://medisale-app.appspot.com");
 const storage=getStorage(app);
 const auth = getAuth(app);
+auth.languageCode='it'
 const db = getFirestore();
 
 export { auth, db, app ,storage,firebase};
