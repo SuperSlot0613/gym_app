@@ -8,7 +8,7 @@ import LoginScreen from "./Screens/LoginScreen";
 import CustomDrawerContent from "./Screens/CustomDrawerContent";
 import useAuth from "./Hooks/useAuth";
 import OnboardingScreen from "./Screens/OnboardingScreen";
-import HomeScreen from "./Screens/HomeScreen";
+import GenderScreen from "./Screens/GenderScreen";
 
 const { width } = Dimensions.get("screen");
 
@@ -28,6 +28,7 @@ function LoginStack(props) {
       }}
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="GenderScreen" component={GenderScreen} />
     </Stack.Navigator>
     //   </Provider>
   );
@@ -40,13 +41,13 @@ function HomeStack(props) {
       mode="card"
       headerMode="screen"
     >
-      <Stack.Screen
-        name="HomeScreen"
+      {/* <Stack.Screen
+        name="GenderScreen"
         options={{
           headerShown: false,
         }}
-        component={HomeScreen}
-      />
+        component={GenderScreen}
+      /> */}
     </Stack.Navigator>
   );
 }

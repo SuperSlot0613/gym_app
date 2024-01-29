@@ -19,6 +19,7 @@ import {
   RecaptchaVerifier,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   ALERT_TYPE,
   Dialog,
@@ -28,9 +29,12 @@ import {
 import OtpEnter from "../src/components/OtpEnter";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import useAuth from "../Hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { ADD_TO_USERDATA } from "../feature/navSlice";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const { signWithEmailId,registerWithEmailId } = useAuth();
   const [number, setnumber] = useState("");
   const [disable, setdisable] = useState(false);
   const [numberVerification, setnumberVerification] = useState({
@@ -40,6 +44,11 @@ const LoginScreen = () => {
   const [count, setcount] = useState(60);
   const [userId, setuserId] = useState();
   const { setuser } = useAuth();
+  const [enablemail, setenablemail] = useState(false);
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [name, setname] = useState("")
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -115,8 +124,8 @@ const LoginScreen = () => {
         textBody: "Number Verification Done",
         button: "close",
       });
-      setuser(number);
-      navigation.navigate("HomeStack");
+      dispatch(ADD_TO_USERDATA(number));
+      navigation.navigate("GenderScreen");
     } else {
       Alert.alert("Please enter a 6 digit OTP code.");
     }
@@ -127,74 +136,164 @@ const LoginScreen = () => {
       <Background>
         {/* <BackButton goBack={navigation.goBack()}/> */}
         <View style={styles.blurImageStyle}>
-          <View style={styles.textInput}>
-            {disable === true ? (
-              <>
-                <OtpEnter />
-                <View style={styles.resendView}>
-                  <TouchableOpacity>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 700,
-                        bottom: 8,
-                        color: count !== 60 ? "crimson" : "white",
-                      }}
-                      onPress={() => setcount(60)}
-                    >
-                      Resend OTP
-                    </Text>
-                  </TouchableOpacity>
-                  {count !== 0 && (
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 700,
-                        color: "crimson",
-                        marginLeft: 10,
-                        bottom: 8,
-                      }}
-                    >
-                      {count + " Seconds"}
-                    </Text>
-                  )}
-                </View>
-              </>
-            ) : (
+          {enablemail ? (
+            <View style={styles.textInput}>
               <KeyboardAvoidingView>
                 <TextInput
-                  style={styles.input}
-                  placeholder="Enter Your Number"
+                  style={[styles.input, { bottom: 40 }]}
+                  placeholder="Enter Your Name"
                   mode="outlined"
-                  keyboardType="numeric"
+                  keyboardType="default"
                   placeholderTextColor={"white"}
-                  value={number}
-                  onChangeText={(text) => setnumber(text)}
+                  value={name}
+                  onChangeText={(text) => setname(text)}
                 />
               </KeyboardAvoidingView>
-            )}
-            <Button
-              onPress={() => {
-                if (disable === false) {
-                  checkNumber();
-                } else {
-                  handleVerifyCode();
-                }
-              }}
-              mode="contained"
-            >
-              CONTINUE
-            </Button>
-          </View>
+              <KeyboardAvoidingView>
+                <TextInput
+                  style={[styles.input, { bottom: 20}]}
+                  placeholder="Enter Your Email"
+                  mode="outlined"
+                  keyboardType="email-address"
+                  placeholderTextColor={"white"}
+                  value={email}
+                  onChangeText={(text) => setemail(text)}
+                />
+              </KeyboardAvoidingView>
+              <KeyboardAvoidingView>
+                <TextInput
+                  secureTextEntry={true}
+                  style={styles.input}
+                  placeholder="Enter Your Password"
+                  mode="outlined"
+                  keyboardType="default"
+                  placeholderTextColor={"white"}
+                  value={password}
+                  onChangeText={(text) => setpassword(text)}
+                />
+                {/* <MaterialCommunityIcons
+                  name={"eye"}
+                  size={24}
+                  color="#aaa"
+                  style={styles.icon}
+                  // onPress={toggleShowPassword}
+                /> */}
+              </KeyboardAvoidingView>
+              {/* <TouchableOpacity> */}
+                <Button
+                  onPress={() => {
+                    console.log("Enter in fun")
+                    registerWithEmailId({name,email, password})
+                  }}
+                  mode="contained"
+                >
+                  CONTINUE
+                </Button>
+              {/* </TouchableOpacity> */}
+            </View>
+          ) : (
+            <View style={styles.textInput}>
+              {disable === true ? (
+                <>
+                  <OtpEnter />
+                  <View style={styles.resendView}>
+                    <TouchableOpacity>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 700,
+                          bottom: 8,
+                          color: count !== 60 ? "crimson" : "white",
+                        }}
+                        onPress={() => setcount(60)}
+                      >
+                        Resend OTP
+                      </Text>
+                    </TouchableOpacity>
+                    {count !== 0 && (
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 700,
+                          color: "crimson",
+                          marginLeft: 10,
+                          bottom: 8,
+                        }}
+                      >
+                        {count + " Seconds"}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              ) : (
+                <KeyboardAvoidingView>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter Your Number"
+                    mode="outlined"
+                    keyboardType="numeric"
+                    placeholderTextColor={"white"}
+                    value={number}
+                    onChangeText={(text) => setnumber(text)}
+                  />
+                </KeyboardAvoidingView>
+              )}
+              <TouchableOpacity
+                onPress={() => {
+                  if (disable === false) {
+                    checkNumber();
+                  } else {
+                    handleVerifyCode();
+                  }
+                }}
+              >
+                <Button mode="contained">CONTINUE</Button>
+              </TouchableOpacity>
+            </View>
+          )}
           <View style={styles.bottomView}>
-            <View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                margin: 0,
+              }}
+            >
               <Text
                 style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
               >
-                OR CONNECT WITH
+                OR SIGN WITH
               </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  if (enablemail) {
+                    setenablemail(false);
+                  } else {
+                    setenablemail(true);
+                  }
+                }}
+              >
+                <Text
+                  style={{
+                    color: "crimson",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    marginLeft: 5,
+                  }}
+                >
+                  {enablemail ? "Sign with Number" : "Sign with Email"}
+                </Text>
+              </TouchableOpacity>
             </View>
-            <Text style={{fontSize:8,fontWeight:"bold",color:"white",top:10}}>
+            <Text
+              style={{
+                fontSize: 8,
+                fontWeight: "bold",
+                color: "white",
+                top: 10,
+              }}
+            >
               By continuing you agree to the Terms of Services and Privacy
               Policy
             </Text>
@@ -213,7 +312,7 @@ const styles = StyleSheet.create({
     height: "50%",
     width: "100%",
     position: "absolute",
-    bottom: 150,
+    bottom: 100,
     justifyContent: "flex-end",
     backfaceVisibility: "visible",
   },
@@ -259,10 +358,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   bottomView: {
-    top:70,
+    top: 60,
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
-    width:"100%"
+    width: "100%",
+  },
+  icon: {
+    marginLeft: 10,
   },
 });

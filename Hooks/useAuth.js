@@ -89,42 +89,47 @@ import React, {
     // };
   
     const registerWithEmailId = ({ name, email, password }) => {
-      createUserWithEmailAndPassword(auth, email.value, password.value)
+      console.log(name,email,password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           var user = userCredential.user;
-          // console.log(user);
-          user.displayName = name.value;
-          setuser(user);
-          setDoc(doc(db, "userInfo", `${email.value}`), {
-            name: name.value,
-            email: email.value,
+          console.log(user);
+          user.displayName = name;
+          // setuser(user);
+          setDoc(doc(db, "userInfo", `${email}`), {
+            name: name,
+            email: email,
             photourl: "",
           });
         })
         .catch((error) => {
           var errorCode = error.code;
+          console.log(errorCode)
           var errorMessage = error.message;
+          console.log(errorMessage)
         });
     };
   
     const signWithEmailId = async ({ email, password }) => {
-      signInWithEmailAndPassword(auth, email.value, password.value)
+      console.log("Enter in inside fun")
+      signInWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           var userinfo = userCredential.user;
-          const docRef = doc(db, "userInfo", userinfo.email);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            userinfo.displayName = docSnap.data().name;
-            userinfo.photoURL = docSnap.data().photourl;
-          }
+          console.log(userinfo)
+          // const docRef = doc(db, "userInfo", userinfo.email);
+          // const docSnap = await getDoc(docRef);
+          // if (docSnap.exists()) {
+          //   userinfo.displayName = docSnap.data().name;
+          //   userinfo.photoURL = docSnap.data().photourl;
+          // }
           // console.log("This login time data", userinfo.displayName);
-          setuser(userinfo);
+          // setuser(userinfo);
         })
         .catch((error) => {
           const errorCode = error.code;
-          // console.log(errorCode);
+          console.log(errorCode);
           const errorMessage = error.message;
-          // console.log(errorMessage);
+          console.log(errorMessage);
         });
     };
   
