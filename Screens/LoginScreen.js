@@ -34,12 +34,12 @@ import { ADD_TO_USERDATA } from "../feature/navSlice";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const { signWithEmailId,registerWithEmailId } = useAuth();
+  const { signWithEmailId, registerWithEmailId } = useAuth();
   const [number, setnumber] = useState("");
   const [disable, setdisable] = useState(false);
   const [numberVerification, setnumberVerification] = useState({
     confirmResult: null,
-    verificationCode: "",
+    verificationCode: "123456",
   });
   const [count, setcount] = useState(60);
   const [userId, setuserId] = useState();
@@ -47,7 +47,7 @@ const LoginScreen = () => {
   const [enablemail, setenablemail] = useState(false);
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [name, setname] = useState("")
+  const [name, setname] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -72,7 +72,12 @@ const LoginScreen = () => {
     if (validatePhoneNumber) {
       setdisable(true);
       console.log(disable);
-      // handleSendCode();
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "SUCCESS",
+        textBody: "OTP Sent Your Mobile Number",
+        button: "close",
+      });
     } else {
       Dialog.show({
         type: ALERT_TYPE.WARNING,
@@ -106,7 +111,7 @@ const LoginScreen = () => {
   const handleVerifyCode = () => {
     // Request for OTP verification
     const codenum = "123456";
-    if (codenum.length == 6) {
+    if (numberVerification.verificationCode == 6) {
       // numberVerification.confirmResult
       //   .confirm(numberVerification.verificationCode)
       //   .then((user) => {
@@ -118,15 +123,30 @@ const LoginScreen = () => {
       //     Alert.alert(error.message);
       //     console.log(error);
       //   });
+      if (numberVerification.verificationCode === codenum) {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Success",
+          textBody: "Number Verification Done",
+          button: "close",
+        });
+        dispatch(ADD_TO_USERDATA(number));
+        navigation.navigate("GenderScreen");
+      } else {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "WARNING",
+          textBody: "Enter OTP is Invailed",
+          button: "close",
+        });
+      }
+    } else {
       Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Success",
+        type: ALERT_TYPE.WARNING,
+        title: "WARNING",
         textBody: "Number Verification Done",
         button: "close",
       });
-      dispatch(ADD_TO_USERDATA(number));
-      navigation.navigate("GenderScreen");
-    } else {
       Alert.alert("Please enter a 6 digit OTP code.");
     }
   };
@@ -151,7 +171,7 @@ const LoginScreen = () => {
               </KeyboardAvoidingView>
               <KeyboardAvoidingView>
                 <TextInput
-                  style={[styles.input, { bottom: 20}]}
+                  style={[styles.input, { bottom: 20 }]}
                   placeholder="Enter Your Email"
                   mode="outlined"
                   keyboardType="email-address"
@@ -180,28 +200,53 @@ const LoginScreen = () => {
                 /> */}
               </KeyboardAvoidingView>
               {/* <TouchableOpacity> */}
-                <Button
-                  onPress={() => {
-                    console.log("Enter in fun")
-                    registerWithEmailId({name,email, password})
-                  }}
-                  mode="contained"
-                >
-                  CONTINUE
-                </Button>
+              <Button
+                onPress={() => {
+                  if (name == "") {
+                    Dialog.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: "WARNING",
+                      textBody: "Please Enter Name",
+                      button: "close",
+                    });
+                  } else if (email == "") {
+                    Dialog.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: "WARNING",
+                      textBody: "Please Enter Email",
+                      button: "close",
+                    });
+                  } else if (password == "") {
+                    Dialog.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: "WARNING",
+                      textBody: "Please Enter Password",
+                      button: "close",
+                    });
+                  } else {
+                    registerWithEmailId({ name, email, password });
+                  }
+                }}
+                mode="contained"
+              >
+                CONTINUE
+              </Button>
               {/* </TouchableOpacity> */}
             </View>
           ) : (
             <View style={styles.textInput}>
               {disable === true ? (
                 <>
-                  <OtpEnter />
+                  <OtpEnter
+                    otpvalue={numberVerification}
+                    otpenter={setnumberVerification}
+                  />
                   <View style={styles.resendView}>
                     <TouchableOpacity>
                       <Text
                         style={{
                           fontSize: 18,
-                          fontWeight: 700,
+                          fontWeight: "bold",
                           bottom: 8,
                           color: count !== 60 ? "crimson" : "white",
                         }}
@@ -214,7 +259,7 @@ const LoginScreen = () => {
                       <Text
                         style={{
                           fontSize: 18,
-                          fontWeight: 700,
+                          fontWeight: "bold",
                           color: "crimson",
                           marginLeft: 10,
                           bottom: 8,
@@ -241,7 +286,16 @@ const LoginScreen = () => {
               <TouchableOpacity
                 onPress={() => {
                   if (disable === false) {
-                    checkNumber();
+                    if (number != "") {
+                      checkNumber();
+                    } else {
+                      Dialog.show({
+                        type: ALERT_TYPE.WARNING,
+                        title: "WARNING",
+                        textBody: "Please Enter Number",
+                        button: "close",
+                      });
+                    }
                   } else {
                     handleVerifyCode();
                   }

@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   text: {
-    fontWeight: 'bold',
+    fontWeight: 700,
     fontSize: 15,
     lineHeight: 26,
     color:"crimson"
