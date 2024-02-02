@@ -111,7 +111,7 @@ const LoginScreen = () => {
   const handleVerifyCode = () => {
     // Request for OTP verification
     const codenum = "123456";
-    if (numberVerification.verificationCode == 6) {
+    if (true) {
       // numberVerification.confirmResult
       //   .confirm(numberVerification.verificationCode)
       //   .then((user) => {
@@ -147,7 +147,6 @@ const LoginScreen = () => {
         textBody: "Number Verification Done",
         button: "close",
       });
-      Alert.alert("Please enter a 6 digit OTP code.");
     }
   };
 
