@@ -9,6 +9,7 @@ import CustomDrawerContent from "./Screens/CustomDrawerContent";
 import useAuth from "./Hooks/useAuth";
 import OnboardingScreen from "./Screens/OnboardingScreen";
 import GenderScreen from "./Screens/GenderScreen";
+import ARScreen from "./Screens/ARScreen";
 
 const { width } = Dimensions.get("screen");
 
@@ -29,6 +30,7 @@ function LoginStack(props) {
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
+      <Stack.Screen name="ARScreen" component={ARScreen} />
     </Stack.Navigator>
     //   </Provider>
   );

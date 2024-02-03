@@ -12,93 +12,116 @@ import {
 import { theme } from "../src/core/theme";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Button from "../src/components/Button";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
   const [male, setmale] = useState(false);
   const [female, setfemale] = useState(false);
+  const navigation = useNavigation();
 
   return (
-    <ImageBackground
-      source={require("../assets/blurback.jpg")}
-      resizeMode="cover"
-      style={styles.background}
-    >
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.container}
-        scrollEnabled={false}
-        behavior={Platform.OS === "ios" ? "padding" : null}
-        keyboardVerticalOffset={keyboardVerticalOffset}
+    <AlertNotificationRoot>
+      <ImageBackground
+        source={require("../assets/blurback.jpg")}
+        resizeMode="cover"
+        style={styles.background}
       >
-        <View style={{ bottom: 150 }}>
-          <Text style={{ fontSize: 25, color: "white", fontWeight: 700 }}>
-            What is Your Gender ?
-          </Text>
-        </View>
-        <View style={styles.ImageDisplay}>
-          <View
-            style={[
-              styles.Imagemain,
-              { borderColor: male ? "crimson" : "white" },
-            ]}
-            onStartShouldSetResponder={() => {
-              if (female) {
-                setfemale(false);
-              }
-              setmale(true);
-            }}
-          >
-            <Image
-              style={styles.ImageChange}
-              source={require("../assets/man_body.png")}
-            />
-            <Text
-              style={{
-                bottom: 20,
-                fontSize: 20,
-                fontWeight: 700,
-                color: "white",
-              }}
-            >
-              Male
+        <KeyboardAwareScrollView
+          resetScrollToCoords={{ x: 0, y: 0 }}
+          contentContainerStyle={styles.container}
+          scrollEnabled={false}
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          keyboardVerticalOffset={keyboardVerticalOffset}
+        >
+          <View style={{ bottom: 150 }}>
+            <Text style={{ fontSize: 25, color: "white", fontWeight: 700 }}>
+              What is Your Gender ?
             </Text>
           </View>
-          <View
-            style={[
-              styles.Imagemain,
-              { borderColor: female ? "crimson" : "white" },
-            ]}
-            onStartShouldSetResponder={() => {
-              if (male) {
-                setmale(false);
-              }
-              setfemale(true);
-            }}
-          >
-            <Image
-              style={[styles.ImageChange, { height: "90%", top: 0 }]}
-              source={require("../assets/female_body.png")}
-            />
-            <Text
-              style={{
-                bottom: 8,
-                fontSize: 20,
-                fontWeight: 700,
-                color: "white",
+          <View style={styles.ImageDisplay}>
+            <View
+              style={[
+                styles.Imagemain,
+                { borderColor: male ? "crimson" : "white" },
+              ]}
+              onStartShouldSetResponder={() => {
+                if (female) {
+                  setfemale(false);
+                }
+                setmale(true);
               }}
             >
-              Female
-            </Text>
+              <Image
+                style={styles.ImageChange}
+                source={require("../assets/man_body.png")}
+              />
+              <Text
+                style={{
+                  bottom: 20,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "white",
+                }}
+              >
+                Male
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.Imagemain,
+                { borderColor: female ? "crimson" : "white" },
+              ]}
+              onStartShouldSetResponder={() => {
+                if (male) {
+                  setmale(false);
+                }
+                setfemale(true);
+              }}
+            >
+              <Image
+                style={[styles.ImageChange, { height: "90%", top: 0 }]}
+                source={require("../assets/female_body.png")}
+              />
+              <Text
+                style={{
+                  bottom: 8,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "white",
+                }}
+              >
+                Female
+              </Text>
+            </View>
           </View>
-        </View>
-        <View style={{ top: 225, width: "100%" }}>
-          <TouchableOpacity>
-            <Button mode="contained">CONTINUE</Button>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAwareScrollView>
-    </ImageBackground>
+          <View style={{ top: 225, width: "100%" }}>
+            <TouchableOpacity
+              onPress={() => {
+                if (male == false && female == false) {
+                  Dialog.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: "WARNING",
+                    textBody: "Please Select Gender",
+                    button: "close",
+                  });
+                } else {
+                  navigation.navigate("ARScreen");
+                }
+              }}
+            >
+              <Button mode="contained">CONTINUE</Button>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAwareScrollView>
+      </ImageBackground>
+    </AlertNotificationRoot>
   );
 };
 
