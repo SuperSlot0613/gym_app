@@ -18,13 +18,18 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { ADD_TO_USERDATA } from "../feature/navSlice";
 
-const HomeScreen = () => {
+const GenderScreen = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
   const [male, setmale] = useState(false);
   const [female, setfemale] = useState(false);
   const navigation = useNavigation();
+  const route=useRoute()
+  console.log(route.params.number)
+  const dispatch=useDispatch()
 
   return (
     <AlertNotificationRoot>
@@ -112,7 +117,17 @@ const HomeScreen = () => {
                     button: "close",
                   });
                 } else {
-                  navigation.navigate("ARScreen");
+                  if(male){
+                    navigation.navigate("HeightScreen",{
+                      number:route.params.number,
+                      gender:"Male"
+                    })
+                  }else{
+                    navigation.navigate("HeightScreen",{
+                      number:route.params.number,
+                      gender:"Female"
+                    })
+                  }
                 }
               }}
             >
@@ -125,7 +140,7 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default GenderScreen;
 
 const styles = StyleSheet.create({
   background: {

@@ -9,7 +9,9 @@ import CustomDrawerContent from "./Screens/CustomDrawerContent";
 import useAuth from "./Hooks/useAuth";
 import OnboardingScreen from "./Screens/OnboardingScreen";
 import GenderScreen from "./Screens/GenderScreen";
-import ARScreen from "./Screens/ARScreen";
+import HeightScreen from "./Screens/HeightScreen";
+import HomeScreen from "./Screens/HomeScreen";
+
 
 const { width } = Dimensions.get("screen");
 
@@ -30,7 +32,7 @@ function LoginStack(props) {
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="GenderScreen" component={GenderScreen} />
-      <Stack.Screen name="ARScreen" component={ARScreen} />
+      <Stack.Screen name="HeightScreen" component={HeightScreen} />
     </Stack.Navigator>
     //   </Provider>
   );
@@ -43,13 +45,13 @@ function HomeStack(props) {
       mode="card"
       headerMode="screen"
     >
-      {/* <Stack.Screen
-        name="GenderScreen"
+      <Stack.Screen
+        name="HomeScreen"
         options={{
           headerShown: false,
         }}
-        component={GenderScreen}
-      /> */}
+        component={HomeScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -88,7 +90,7 @@ const Menu = () => {
         },
       }}
       initialRouteName={
-        user === null ? "OnboardingScreen" : "HomeStack"
+        user === null ? "OnboardingScreen" : "HomeScreen"
       }
     >
       {user !== null ? (
@@ -97,7 +99,7 @@ const Menu = () => {
             options={{
               headerShown: false,
             }}
-            name="HomeStack"
+            name="HomeScreen"
             component={HomeStack}
           />
         </>

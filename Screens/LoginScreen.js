@@ -130,8 +130,7 @@ const LoginScreen = () => {
           textBody: "Number Verification Done",
           button: "close",
         });
-        dispatch(ADD_TO_USERDATA(number));
-        navigation.navigate("GenderScreen");
+        navigation.navigate("GenderScreen",{number:number});
       } else {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
