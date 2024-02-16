@@ -1,15 +1,14 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
 
 const HomeScreen = () => {
   return (
-    <SafeAreaProvider style={{backgroundColor:"#171616"}}>
-      <View>
-        <Text>HomeScreen</Text>
-      </View>
-    </SafeAreaProvider>
-  );
-};
+    <View>
+      <Text>HomeScreen</Text>
+    </View>
+  )
+}
 
-export default HomeScreen;
+export default HomeScreen
+
+const styles = StyleSheet.create({})
