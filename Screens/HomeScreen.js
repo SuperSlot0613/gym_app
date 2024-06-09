@@ -6,6 +6,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Image } from "react-native";
+import axios from "axios";
 
 const HomeScreen = () => {
   const cameraRef = useRef(null);
@@ -14,6 +15,43 @@ const HomeScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [showCamera, setshowCamera] = useState(false);
+  const [image, setImage] = useState(null);
+
+  const takePhoto = async () => {
+    if (cameraRef) {
+      console.log("In take photo");
+      try {
+        let photo = await cameraRef.current.takePictureAsync({
+          allowsEditing: true,
+          aspects: [4, 3],
+          quality: 1,
+          base64: true,
+        });
+        // if (card) {
+        //   dispatch(setDocument(photo.base64));
+        // } else {
+        //   dispatch(setFaceImage(photo.base64));
+        // }
+        console.log("The is photo",photo.uri);
+        axios({
+          url: "http://10.0.2.2:4420/imagecheck",
+          method: "GET",
+          headers: {
+              authorization: "your token comes here",
+          },
+          data: photo,
+        }).then((res) => {
+          console.log(res)
+        }).catch((err) => {
+          console.log(err.message)
+        });
+        return photo;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -35,10 +73,9 @@ const HomeScreen = () => {
           <Camera
             style={styles.camera}
             type={type}
-            flashMode={Camera.Constants.FlashMode.on}
+            flashMode={Camera.Constants.FlashMode.off}
             ref={cameraRef}
             autoFocus={Camera.Constants.AutoFocus.on}
-            
             // onFacesDetected={card === "true" ? "" : handleFacesDetected}
             // faceDetectorSettings={{
             //   mode: FaceDetector.FaceDetectorMode.fast,
@@ -50,10 +87,10 @@ const HomeScreen = () => {
           >
             <View style={{flex:1,flexDirection:"column"}}>
               <View style={{alignItems:"center",justifyContent:"center",top:200}}>
-                <Image
+                {/* <Image
                   source={require("../assets/workout.gif")}
                   style={{ width: "100%", height: 400,alignContent:"center" }}
-                />
+                /> */}
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
@@ -74,8 +111,13 @@ const HomeScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button}
-                  // onPress={async () => {
-                  // }}
+                  onPress={async () => {
+                    const r = await takePhoto();
+                    if (!r.canceled) {
+                      setImage(r.uri);
+                    }
+                    setshowCamera(false);
+                  }}
                 >
                   <MaterialIcons name="camera" size={44} color="white" />
                 </TouchableOpacity>
@@ -131,7 +173,7 @@ const styles = StyleSheet.create({
     margin: 15,
     justifyContent: "space-between",
     // alignItems:"center"
-    top:100
+    top:300
   },
   button: {
     flex: 1,
